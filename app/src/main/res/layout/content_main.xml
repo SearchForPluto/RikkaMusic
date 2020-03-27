@@ -52,6 +52,7 @@
         android:id="@+id/bottom_controller"
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_50"
+        android:visibility="invisible"
         android:layout_alignParentBottom="true" />
 
     <android.support.v4.view.ViewPager

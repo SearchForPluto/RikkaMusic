@@ -6,6 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".main.mvp.view.SplashActivity"
     android:fitsSystemWindows="true"
-    android:background="@drawable/splash_view">
+    android:background="@mipmap/splash_view">
 
 </LinearLayout>

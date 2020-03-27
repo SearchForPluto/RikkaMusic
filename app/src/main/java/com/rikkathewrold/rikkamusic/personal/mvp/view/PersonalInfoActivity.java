@@ -13,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.MultiTransformation;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.hjq.toast.ToastUtils;
@@ -122,10 +124,10 @@ public class PersonalInfoActivity extends BaseActivity<PersonalPresenter> implem
         setBackBtn(getString(R.string.colorWhite));
 
         if (getIntent().getStringExtra(LOGIN_BEAN) != null) {
-            //如果是查看本人的信息
+            //如果是查看本人的信息  从MainActivity传过来的参数loginbean String
             btnEdit.setVisibility(View.VISIBLE);
             String loginProfileBean = getIntent().getStringExtra(LOGIN_BEAN);
-            loginBean = GsonUtil.fromJSON(loginProfileBean, LoginBean.ProfileBean.class);
+            loginBean = GsonUtil.fromJSON(loginProfileBean, LoginBean.ProfileBean.class);//使用gson将其转化成bean对象
             setMyInfoBean();
             mPresenter.getUserDetail(loginBean.getUserId());
         } else if (getIntent().getStringExtra(USER_BEAN) != null) {
@@ -150,20 +152,36 @@ public class PersonalInfoActivity extends BaseActivity<PersonalPresenter> implem
 
     @SuppressLint("SetTextI18n")
     private void setMyInfoBean() {
-        setLeftTitleText(loginBean.getNickname(), getString(R.string.colorWhite));
+        //可以改进的地方 1.可以改进 根据背景图片  改版昵称和相关字的颜色 否则当字颜色和背景图片颜色相同时会显示不出来
+        //2.没有做沉浸式状态栏
+        //3.编辑资料  修改背景图片  实时更新
+        setLeftTitleText(loginBean.getNickname(), getString(R.string.colorWhite));//设置昵称
         setLeftTitleTextColorWhite();
         tvLike.setText(getString(R.string.follows) + loginBean.getFollows());
         tvFans.setText(getString(R.string.followeds) + loginBean.getFolloweds());
-        Glide.with(this).load(loginBean.getAvatarUrl()).into(ivAvatar);
-        coverUrl = loginBean.getBackgroundUrl();
+        Glide.with(this).load(loginBean.getAvatarUrl()).into(ivAvatar);//加载头像
+        coverUrl = loginBean.getBackgroundUrl();//获得背景图片路径
         Glide.with(this)
                 .load(coverUrl)
-                .into(ivBgCover);
+                .into(ivBgCover);//加载背景
+
+        // 圆角和高斯模糊,设置模糊度(在0.0到25.0之间)，默认”25";"4":图片缩放比例,默认“1”
+        MultiTransformation multi = new MultiTransformation(
+                new BlurTransformation( 25, 1 ),
+                new RoundedCorners( 10 ) //设置图片圆角角度
+        );
+        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+        RequestOptions options = new RequestOptions()
+                .fitCenter()
+                //.placeholder( R.mipmap.icon_bg)
+                //.error( R.mipmap.icon_bg );
+                .bitmapTransform( multi ).override( 300, 400 );
         Glide.with(this)
                 .load(coverUrl)
-                .apply(RequestOptions.bitmapTransform(new BlurTransformation(25, 1)))
-                .into(ivBg);
+                .apply(options)
+                .into(ivBg);//Glide加载背景图
         tvNickName.setText(loginBean.getNickname());
+        //EventBus通信
         EventBus.getDefault().postSticky(new UidEvent(loginBean.getUserId(), loginBean.getNickname()));
     }
 
@@ -191,8 +209,9 @@ public class PersonalInfoActivity extends BaseActivity<PersonalPresenter> implem
 
     @Override
     protected void onResume() {
+        //改进 ：目前存在重叠问题
         super.onResume();
-
+        //appBar折叠时设置相应图片文字透明度  消除视觉冲突
         appBar.addOnOffsetChangedListener(new AppBarStateChangeListener() {
             @Override
             public void onStateChanged(AppBarLayout appBarLayout, State state) {
@@ -202,7 +221,7 @@ public class PersonalInfoActivity extends BaseActivity<PersonalPresenter> implem
                     ivBgCover.setImageAlpha(255);
                     ivAvatar.setAlpha(255);
                     btnEdit.setAlpha(1);
-                    tvNickName.setAlpha(1);
+                    tvNickName.setAlpha(1);//即透明度。其取值范围是0---255,数值越小，越透明，颜色上表现越淡。
                     tvLike.setAlpha(1);
                     tvFans.setAlpha(1);
                 }
@@ -229,18 +248,20 @@ public class PersonalInfoActivity extends BaseActivity<PersonalPresenter> implem
     }
 
     @Override
-    @OnClick({R.id.btn_edit, R.id.iv_avatar})
+    @OnClick({R.id.btn_edit, R.id.iv_avatar})//点击编辑资料按钮和点击头像  这里缺少修改头像按钮
     public void onClick(View v) {
-        if (ClickUtil.isFastClick(1000, v)) {
+        if (ClickUtil.isFastClick(1000, v)) {//快速多次点击校验
             return;
         }
         Intent intent = new Intent();
         switch (v.getId()) {
             case R.id.btn_edit:
+                //改进：编辑资料界面暂时未做 可改进
                 intent.setClass(PersonalInfoActivity.this, PersonalSettingActivity.class);
                 startActivity(intent);
                 break;
             case R.id.iv_avatar:
+                // 查看头像图片
                 intent.setClass(PersonalInfoActivity.this, PictureCheckActivity.class);
                 if (loginBean != null) {
                     intent.putExtra(PIC_URL, loginBean.getAvatarUrl());
@@ -249,9 +270,9 @@ public class PersonalInfoActivity extends BaseActivity<PersonalPresenter> implem
                 }
                 startActivity(intent);
                 break;
-            case R.id.tv_fans:
+            case R.id.tv_fans://查看粉丝界面
             case R.id.tv_like:
-                ToastUtils.show("进入我的好友界面");
+                ToastUtils.show("进入我的好友界面");// 我的好友界面  可改进
                 break;
         }
     }

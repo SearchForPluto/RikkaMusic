@@ -19,16 +19,20 @@ public class ScreenUtils {
 
     /**
      * Set the status bar color.
+     * 设置状态栏颜色
      */
     public static void setStatusBarColor(Activity activity, int statusBarColor) {
-        Window window = activity.getWindow();
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        Window window = activity.getWindow();//获得当前容器的window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);//取消设置透明状态
+        //需要设置这个 flag 才能调用 setStatusBarColor 来设置状态栏颜色
         window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        //自5.0引入 Material Design ,状态栏对开发者更加直接,可以直接调用 setStatusBarColor 来设置状态栏的颜色.
         window.setStatusBarColor(statusBarColor);
     }
 
     /**
      * Set the status bar to dark.
+     * 设置状态栏字体颜色为黑色
      */
     public static void setStatusBarDarkFont(Activity activity, boolean darkFont) {
         if (setMIUIStatusBarFont(activity, darkFont)) {

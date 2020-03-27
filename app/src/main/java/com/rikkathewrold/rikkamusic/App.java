@@ -21,11 +21,14 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         mContext = this;
-        ToastUtils.init(this);
+        ToastUtils.init(this);//初始化ToastUtils
         MusicManager.initMusicManager(this);
         initDataBase();
     }
 
+    /**
+     * 初始化GreenDao
+     */
     private void initDataBase() {
         DaoMaster.DevOpenHelper openHelper = new DaoMaster.DevOpenHelper(this, DATA_BASE_NAME);
         Database db = openHelper.getWritableDb();

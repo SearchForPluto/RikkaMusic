@@ -76,7 +76,7 @@ public abstract class BaseActivity<P extends BasePresenter> extends AppCompatAct
 
     public void createDialog() {
         if (mDialog == null) {
-            mDialog = new LoadingDialog(this, "loading...");
+            mDialog = new LoadingDialog(this, "loading...");//dialog背景是否可以优化  或者dialog是否可以优化
         }
     }
 

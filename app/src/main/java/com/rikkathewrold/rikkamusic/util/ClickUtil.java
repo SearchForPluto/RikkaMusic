@@ -3,6 +3,9 @@ package com.rikkathewrold.rikkamusic.util;
 import android.util.SparseArray;
 import android.view.View;
 
+/**
+ *
+ */
 public class ClickUtil {
     //两次按钮点击时间间隔不能少于1s
     private static SparseArray<Long> lastClickViewArray = new SparseArray<>();

@@ -1,10 +1,13 @@
 package com.rikkathewrold.rikkamusic.personal.event;
 
+/**
+ * EventBus传递信息类
+ */
 public class UidEvent {
 
     public UidEvent(long uid, String name) {
-        this.uid = uid;
-        nickName = name;
+        this.uid = uid;//userId
+        nickName = name;//昵称
     }
 
     private long uid;

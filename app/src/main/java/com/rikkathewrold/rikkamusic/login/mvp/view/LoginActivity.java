@@ -26,6 +26,9 @@ import butterknife.OnClick;
 public class LoginActivity extends BaseActivity<LoginPresenter> implements LoginContract.View {
     private static final String TAG = "LoginActivity";
 
+    /**
+     * 使用bufferKnife 注入view
+     */
     @BindView(R.id.et_phone)
     EditText etPhone;
     @BindView(R.id.et_pwd)
@@ -43,8 +46,11 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         return new LoginPresenter(this);
     }
 
+    /**
+     * 初始化数据 从SharePreference中取出phoneNumber并赋值到文本框中
+     */
     @Override
-    protected void initData() {
+    protected void initData() {//初始化数据
         setBackBtn(getString(R.string.colorBlack));
         setLeftTitleText(R.string.login_phone_number);
         if (!TextUtils.isEmpty(SharePreferenceUtil.getInstance(this).getAccountNum())) {
@@ -53,6 +59,9 @@ public class LoginActivity extends BaseActivity<LoginPresenter> implements Login
         }
     }
 
+    /**
+     * 初始化ButterKnife
+     */
     @Override
     protected void initModule() {
         ButterKnife.bind(this);

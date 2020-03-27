@@ -92,7 +92,7 @@ public class LoginBean {
         private int baoyueVersion;
         private int donateVersion;
         private int vipType;
-        private int viptypeVersion;
+        private long viptypeVersion;
         private boolean anonimousUser;
 
         public long getId() {
@@ -191,7 +191,7 @@ public class LoginBean {
             this.vipType = vipType;
         }
 
-        public int getViptypeVersion() {
+        public long getViptypeVersion() {
             return viptypeVersion;
         }
 
@@ -267,7 +267,7 @@ public class LoginBean {
 
         private String detailDescription;
         private boolean followed;
-        private int userId;
+        private long userId;
         private boolean defaultAvatar;
         private String avatarUrl;
         private String nickname;
@@ -315,11 +315,11 @@ public class LoginBean {
             this.followed = followed;
         }
 
-        public int getUserId() {
+        public long getUserId() {
             return userId;
         }
 
-        public void setUserId(int userId) {
+        public void setUserId(long userId) {
             this.userId = userId;
         }
 
@@ -621,7 +621,7 @@ public class LoginBean {
 
         private int refreshTime;
         private String url;
-        private int userId;
+        private long userId;
         private String tokenJsonStr;
         private long id;
         private int type;
@@ -645,11 +645,11 @@ public class LoginBean {
             this.url = url;
         }
 
-        public int getUserId() {
+        public long getUserId() {
             return userId;
         }
 
-        public void setUserId(int userId) {
+        public void setUserId(long userId) {
             this.userId = userId;
         }
 

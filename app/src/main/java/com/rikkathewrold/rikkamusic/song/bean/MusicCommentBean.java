@@ -282,7 +282,7 @@ public class MusicCommentBean {
 
             private Object locationInfo;
             private Object liveInfo;
-            private int userId;
+            private long userId;
             private String nickname;
             private int authStatus;
             private String avatarUrl;
@@ -309,11 +309,11 @@ public class MusicCommentBean {
                 this.liveInfo = liveInfo;
             }
 
-            public int getUserId() {
+            public long getUserId() {
                 return userId;
             }
 
-            public void setUserId(int userId) {
+            public void setUserId(long userId) {
                 this.userId = userId;
             }
 

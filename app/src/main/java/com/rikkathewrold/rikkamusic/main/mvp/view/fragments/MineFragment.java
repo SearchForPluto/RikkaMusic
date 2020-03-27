@@ -73,7 +73,7 @@ public class MineFragment extends BaseFragment<MinePresenter> implements MineCon
     }
 
     @Override
-    protected void initData() {
+    protected void initData() {//初始化数据
         loginBean = GsonUtil.fromJSON(SharePreferenceUtil.getInstance(getContext()).getUserInfo(""), LoginBean.class);
         uid = loginBean.getAccount().getId();
 

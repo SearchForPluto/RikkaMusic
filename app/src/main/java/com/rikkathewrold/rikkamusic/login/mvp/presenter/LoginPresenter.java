@@ -23,9 +23,9 @@ public class LoginPresenter extends LoginContract.Presenter {
     public void login(String phone, String password) {
         LogUtil.d(TAG, "login");
         mModel.login(phone, password)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<LoginBean>() {
+                .subscribeOn(Schedulers.io())//在IO线程执行
+                .observeOn(AndroidSchedulers.mainThread())//回调在主线程
+                .subscribe(new Observer<LoginBean>() {//订阅  创建观察者
                     @Override
                     public void onSubscribe(Disposable d) {
                         LogUtil.d(TAG, "onSubscribe");

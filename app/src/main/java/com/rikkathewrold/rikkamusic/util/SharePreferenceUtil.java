@@ -65,7 +65,9 @@ public class SharePreferenceUtil {
      * @param bean
      */
     public void saveUserInfo(LoginBean bean, String phoneNumber) {
-        if (bean.getBindings().size() > 1) {
+        if (bean.getBindings().size() ==1) {
+            saveAuthToken(bean.getBindings().get(0).getTokenJsonStr());
+        }else if (bean.getBindings().size() >1){
             saveAuthToken(bean.getBindings().get(1).getTokenJsonStr());
         }
         saveAccountNum(phoneNumber);

@@ -19,6 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
+        android:largeHeap="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".dj.mvp.view.RadioActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -59,14 +60,16 @@
                 android:name="android.max_aspect"
                 android:value="ratio_float" />
         </activity>
-        <activity android:name=".song.mvp.view.CommentActivity" /> <!-- 适配华为（huawei）刘海屏 -->
+        <activity android:name=".song.mvp.view.CommentActivity" />
         <meta-data
             android:name="android.notch_support"
-            android:value="true" /> <!-- 适配小米（xiaomi）刘海屏 -->
+            android:value="true" /> <!-- 适配华为（huawei）刘海屏 -->
         <meta-data
             android:name="notch.config"
-            android:value="portrait|landscape" />
-
+            android:value="portrait|landscape" /><!-- 适配小米（xiaomi）刘海屏 -->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.2"/><!--允许绘制到oppo、vivo刘海屏机型的刘海区域 -->
         <activity
             android:name=".search.mvp.view.SingerInfoDetailActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
@@ -135,7 +138,7 @@
         <activity
             android:name=".song.mvp.view.SongActivity"
             android:configChanges="screenSize|orientation|keyboardHidden"
-            android:launchMode="singleTop"
+                android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".song.mvp.view.SongDetailActivity"

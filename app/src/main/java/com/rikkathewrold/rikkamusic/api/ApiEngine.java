@@ -7,8 +7,10 @@ import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersisto
 import com.google.gson.Gson;
 import com.rikkathewrold.rikkamusic.App;
 
+import java.io.File;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -21,7 +23,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class ApiEngine {
     private volatile static ApiEngine apiEngine;
     private Retrofit retrofit;
-
+    private    Cache  cache;
     private ApiEngine() {
 
         //添加网络拦截器
@@ -30,28 +32,28 @@ public class ApiEngine {
         ResponseInterceptor responseInterceptor = new ResponseInterceptor();
 
         //缓存
-//        int size = 1024 * 1024 * 100;
-//        File cacheFile = new File(App.getContext().getCacheDir(), "OkHttpCache");
-//        Cache cache = new Cache(cacheFile, size);
+        int size = 1024 * 1024 * 100;
+        File cacheFile = new File(App.getContext().getCacheDir(), "OkHttpCache");
+        cache = new Cache(cacheFile, size);
 
         ClearableCookieJar cookieJar = new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(App.getContext()));
 
         OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(20, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
                 .readTimeout(20, TimeUnit.SECONDS)
                 .writeTimeout(20, TimeUnit.SECONDS)
-                .addNetworkInterceptor(netWorkInterceptor)
-                .addInterceptor(responseInterceptor)
+                .addNetworkInterceptor(netWorkInterceptor)//设置拦截器
+                .addInterceptor(responseInterceptor)//解析返回结果的Interceptor
                 .cookieJar(cookieJar)
-//                .cache(cache)
+                .cache(cache)//启用缓存
                 .build();
 
         Gson gson = new Gson();
         retrofit = new Retrofit.Builder()
                 .baseUrl(ApiService.BASE_URL)
                 .client(client)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))//Gson转换
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//Rxjava转换
                 .build();
     }
 

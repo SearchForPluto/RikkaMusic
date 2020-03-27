@@ -54,7 +54,12 @@ import static com.rikkathewrold.rikkamusic.App.getContext;
 public class MainActivity extends BaseActivity<MainPresenter> implements MainContract.View {
     private static final String TAG = "MainActivity";
 
-    //viewPager会缓存的Fragment数量
+    //viewPager会缓存的Fragment数量 为2+1
+    /**
+     * FragmentPagerAdapter设置setOffscreenPageLimit不影响fragment缓存的个数,
+     *  而FragmentStatePagerAdapter缓存的fragment实例个数就是setOffscreenPageLimit
+     *  设置的值+1
+     */
     private static final int VIEWPAGER_OFF_SCREEN_PAGE_LIMIT = 2;
     public static final String LOGIN_BEAN = "loginBean";
 
@@ -85,16 +90,16 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         setContentView(R.layout.activity_main);
 
         ImmersionBar.with(this)
-                .transparentBar()
-                .statusBarColor(R.color.colorPrimary)
+                .transparentBar()//设置透明
+                .statusBarColor(R.color.colorPrimary)//设置与APP  tab栏颜色相同
                 .statusBarDarkFont(false)
                 .init();
         connectMusicService();
 
         mPagerAdapter = new MultiFragmentPagerAdapter(getSupportFragmentManager());
-        fragments.add(new MineFragment());
-        fragments.add(new WowFragment());
-        fragments.add(new CloudVillageFragment());
+        fragments.add(new MineFragment());//我的
+        fragments.add(new WowFragment());//发现
+        fragments.add(new CloudVillageFragment());//云村
         mPagerAdapter.init(fragments);
     }
 
@@ -115,15 +120,23 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
         loginBean = GsonUtil.fromJSON(userLoginInfo, LoginBean.class);
 
         viewPager.setAdapter(mPagerAdapter);
+        /**
+         * 这个方法是用来控制fragment不重新走生命周期的个数的，
+         * 打个比方一共4个fragment页面，
+         * 如果mViewPager.setOffscreenPageLimit(3)，
+         * 那么所有的fragment都只走一次生命周期，
+         * 如果是mViewPager.setOffscreenPageLimit(2)，
+         * 那么其中有一个fragment会在切换的时候重新走一遍生命周期，
+         * FragmentStatePagerAdapter和FragmentPagerAdapter都是这样
+         * 另外setOffscreenPageLimit的缺省值是1，设置0是无效的会被强制赋值成1。
+         */
         viewPager.setOffscreenPageLimit(VIEWPAGER_OFF_SCREEN_PAGE_LIMIT);
         viewPager.setCurrentItem(1);
         mPagerAdapter.getItem(1).setUserVisibleHint(true);
         tabTitle.setupWithViewPager(viewPager);
         tabTitle.setTabTextColors(Color.parseColor("#e78c86"), Color.parseColor("#FFFDFD"));
-        assert loginBean != null;
+        assert loginBean != null:"获取登录信息失败！";
         initView(loginBean);
-
-
         setSelectTextBoldAndBig(Objects.requireNonNull(tabTitle.getTabAt(1)));
         initTabListener();
         mPresenter.getLikeList(loginBean.getAccount().getId());
@@ -159,11 +172,11 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
 
     //根据用户的LoginBean初始化一些信息
     private void initView(LoginBean bean) {
-        if (bean.getProfile().getAvatarUrl() != null) {
+        if (bean.getProfile().getAvatarUrl() != null) {//获取头像路径
             String avatarUrl = bean.getProfile().getAvatarUrl();
-            Glide.with(this).load(avatarUrl).into(ivAvatar);
+            Glide.with(this).load(avatarUrl).into(ivAvatar);//使用glide加载头像
         }
-        if (bean.getProfile().getNickname() != null) {
+        if (bean.getProfile().getNickname() != null) {//获得昵称
             userName.setText(bean.getProfile().getNickname());
         }
     }
@@ -200,9 +213,9 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
                 break;
             case R.id.rl_avatar_name:
                 drawer.closeDrawer(GravityCompat.START);
-                intent.setClass(MainActivity.this, PersonalInfoActivity.class);
+                intent.setClass(MainActivity.this, PersonalInfoActivity.class);//启动个人信息活动
                 String loginbean = GsonUtil.toJson(loginBean.getProfile());
-                intent.putExtra(LOGIN_BEAN, loginbean);
+                intent.putExtra(LOGIN_BEAN, loginbean);//传入loginbean
                 startActivity(intent);
                 break;
             case R.id.iv_search:
@@ -251,7 +264,7 @@ public class MainActivity extends BaseActivity<MainPresenter> implements MainCon
     @Override
     public void onLogoutSuccess() {
         hideDialog();
-        SharePreferenceUtil.getInstance(this).remove(Constants.SpKey.AUTH_TOKEN);
+        SharePreferenceUtil.getInstance(this).remove(Constants.SpKey.AUTH_TOKEN);//清除登录历史  下次登录需要输入密码 重新登陆
         ActivityStarter.getInstance().startLoginActivity(this);
         this.finish();
     }

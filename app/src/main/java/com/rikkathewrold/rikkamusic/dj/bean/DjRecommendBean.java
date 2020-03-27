@@ -267,7 +267,7 @@ public class DjRecommendBean {
             private int gender;
             private int city;
             private long birthday;
-            private int userId;
+            private long userId;
             private int userType;
             private String nickname;
             private String signature;
@@ -358,11 +358,11 @@ public class DjRecommendBean {
                 this.birthday = birthday;
             }
 
-            public int getUserId() {
+            public long getUserId() {
                 return userId;
             }
 
-            public void setUserId(int userId) {
+            public void setUserId(long userId) {
                 this.userId = userId;
             }
 

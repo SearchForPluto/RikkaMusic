@@ -136,8 +136,8 @@ public class PlayListActivity extends BaseActivity<WowPresenter> implements WowC
     }
 
     @Override
-    protected void initData() {
-        setBackBtn(getString(R.string.colorWhite));
+    protected void initData() {//播放歌曲界面初始化界面
+        setBackBtn(getString(R.string.colorWhite));//改进  播放界面背景  根据背景切换按钮颜色
         setLeftTitleTextColorWhite();
         setLeftTitleText(R.string.playlist);
         beanList.clear();
